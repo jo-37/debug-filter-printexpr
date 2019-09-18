@@ -64,4 +64,8 @@ my $lineno = __LINE__ + 1;
 #${}
 like $result, qr/^line $lineno:\s*$/, 'lineno';
 
+$handle = IO::String->new($result = '');
+#${localtime}
+like $result, qr/^line \d+: localtime = '\w{3} \w{3} [ 0-9:]{16}';$/, 'sub in scalar context';
+
 done_testing;

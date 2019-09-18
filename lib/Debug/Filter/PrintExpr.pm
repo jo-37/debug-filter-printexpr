@@ -22,8 +22,8 @@ sub genprefix {
 # print out an expression in scalar context
 sub valuescalar {
 	my $value = shift;
-	print $handle (defined(scalar($value)) ?
-		(ref($value) ? $value : ("'", scalar($value), "'")) :
+	print $handle (defined($value) ?
+		(ref($value) ? $value : ("'", $value, "'")) :
 		'undef');
 }
 
@@ -56,10 +56,10 @@ sub genclose {
 
 # process a complete scalar debug statement
 sub printscalar {
-	my ($self, $label, $line, $expr, @value) = @_;
+	my ($self, $label, $line, $expr, $value) = @_;
 	genprefix @_;
-	valuescalar(scalar(@value)) if @value;
-	print $handle ';' if @value;
+	valuescalar($value) if $value;
+	print $handle ';' if $value;
 	print $handle "\n";
 }
 
@@ -111,7 +111,7 @@ sub gen_print {
 	if ($type eq '$') {
 		my $print = $self . "::printscalar";
 		$expr ||= '';
-		return qq[{$print("$self", "$label", __LINE__, '$expr', $expr);}];
+		return qq[{$print("$self", "$label", __LINE__, '$expr', scalar(($expr)||''));}];
 	} elsif ($type eq '@') {
 		my $print = $self . "::printarray";
 		return qq[{$print("$self", "$label", __LINE__, '$expr', $expr);}];
