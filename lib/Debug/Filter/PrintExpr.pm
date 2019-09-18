@@ -295,8 +295,11 @@ and produce these results:
 	array_as_hash: @a = ('0' => 'this', '1' => 'is', '2' => 'an', '3' => 'array');
 	
 Regular expressions may be evaluated too:
+
 	#@{"a<b>c<d><e>f<g>h" =~ /\w*<(\w+)>/g}
+
 gives:
+
 	line nn: "a<b>c<d><e>f<g>h" =~ /\w*<(\w+)>/g = ('b', 'd', 'e', 'g');
 
 If the expression is omitted, only the label will be printed.
