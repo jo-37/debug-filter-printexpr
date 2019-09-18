@@ -111,7 +111,7 @@ sub gen_print {
 	if ($type eq '$') {
 		my $print = $self . "::printscalar";
 		$expr ||= '';
-		return qq[{$print("$self", "$label", __LINE__, '$expr', scalar(($expr)||''));}];
+		return qq[{$print("$self", "$label", __LINE__, '$expr', scalar(($expr)));}];
 	} elsif ($type eq '@') {
 		my $print = $self . "::printarray";
 		return qq[{$print("$self", "$label", __LINE__, '$expr', $expr);}];
