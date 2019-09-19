@@ -111,10 +111,10 @@ sub gen_print {
 	if ($type eq '$') {
 		my $print = $self . "::printscalar";
 		$expr ||= '';
-		return qq[{$print("$self", "$label", __LINE__, '$expr', scalar(($expr)));}];
+		return qq[{$print("$self", "$label", __LINE__, q{$expr}, scalar(($expr)));}];
 	} elsif ($type eq '@') {
 		my $print = $self . "::printarray";
-		return qq[{$print("$self", "$label", __LINE__, '$expr', $expr);}];
+		return qq[{$print("$self", "$label", __LINE__, q{$expr}, $expr);}];
 	} elsif ($type eq '%') {
 		my $printopen = $self . '::printhashopen';
 		my $printitem = $self . '::printhashitem';
@@ -122,14 +122,14 @@ sub gen_print {
 		my $sep = '$' . $self . '::sep';
 		my $pair = '@' . $self . '::pair';
 		my $stmt = qq[{local ($sep, $pair); ];
-		$stmt .= qq[$printopen("$self", "$label", __LINE__, '$expr'); ];
+		$stmt .= qq[$printopen("$self", "$label", __LINE__, q{$expr}); ];
 		$stmt .= qq[$printitem($sep, $pair) ];
 		$stmt .= qq[while $pair = each($expr); ];
 		$stmt .= qq[$printclose;}];
 		return $stmt;
 	} elsif ($type eq '\\') {
 		my $print = $self . "::printref";
-		return qq[{$print("$self", "$label", __LINE__, '$expr', $expr);}];
+		return qq[{$print("$self", "$label", __LINE__, q{$expr}, $expr);}];
 	} else {
 		return '# type unknown';
 	}
@@ -144,7 +144,7 @@ FILTER {
 		\{\h*
 		(?<label>[[:alpha:]_]\w*:)?
 		\h*
-		(?<expr>[^'\v]+)?
+		(?<expr>\V+)?
 		\}\h*$
 	/ gen_print($self, $+{type}, $+{label}, $+{expr}) /gmex;
 	print STDERR if $opt{-debug};
