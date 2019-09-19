@@ -145,7 +145,7 @@ FILTER {
 		(?<label>[[:alpha:]_]\w*:)?
 		\h*
 		(?<expr>\V+)?
-		\}\h*$
+		\}\h*\r?$
 	/ gen_print($self, $+{type}, $+{label}, $+{expr}) /gmex;
 	print STDERR if $opt{-debug};
 };
@@ -153,6 +153,8 @@ FILTER {
 1;
 
 __END__
+
+=encoding utf8
 
 =head1 NAME
 
