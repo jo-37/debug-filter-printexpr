@@ -235,7 +235,7 @@ or more formally must be matched by the following regexp:
 	\{\h*
 	(?<label>[[:alpha:]_]\w*:)?
 	\h*
-	(?<expr>[^'\v]+)?
+	(?<expr>\V+)?
 	\}\h*$
  }x
 
@@ -309,16 +309,11 @@ Requirements for the expression are:
 
 =over 4
 
-=item 1.
+=item *
 
 It must be a valid Perl expression.
 
-=item 2.
-
-It must not contain single quotes.
-(You may use q{} instead.)
-
-=item 3.
+=item *
 
 In case of the #%{}-form, it must be a valid argument to the
 each() builtin function, i.e. it should resolve to an array or hash.
