@@ -28,6 +28,9 @@ WriteMakefile(
 	META_MERGE => {
 		"meta-spec" => { version => 2 },
 		resources => {
+			bugtracker => {
+				web => 'https://github.com/jo-37/debug-filter-printexpr/issues',
+			},
 			repository => {
 				type => 'git',
 				url => 'git://github.com/jo-37/debug-filter-printexpr.git',
