@@ -22,7 +22,10 @@ like $result, qr/^line \d+: \$s = '$s';$/, 'scalar';
 
 $handle = IO::String->new($result = '');
 my $t = 2;
-#${$s, $t}
+{
+	no warnings qw(void);
+	#${$s, $t}
+}
 like $result, qr/^line \d+: \$s, \$t = '$t';$/, 'list in scalar context';
 
 $handle = IO::String->new($result = '');
