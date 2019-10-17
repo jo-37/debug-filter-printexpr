@@ -1,6 +1,8 @@
 Revision history for Debug-Filter-PrintExpr
 
 0.02_1	pending
+		[doc]
+		fixed POD
 
 		[doc]
 		fixed README.md
