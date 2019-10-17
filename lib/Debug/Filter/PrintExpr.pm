@@ -268,7 +268,7 @@ in parentheses.
 The expression is used as argument in a while-each loop and the output
 consists of pairs of the form 'key' => 'value' inside parentheses.
 
-=item \\
+=item \
 
 The expression shall be a list of references.
 These will be evaluated using C<Data::Dumper>.
