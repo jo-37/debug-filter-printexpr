@@ -115,7 +115,7 @@ and the output format of the result:
     The expression is used as argument in a while-each loop and the output
     consists of pairs of the form 'key' => 'value' inside parentheses.
 
-- \\\\
+- \\
 
     The expression shall be a list of references.
     These will be evaluated using `Data::Dumper`.
