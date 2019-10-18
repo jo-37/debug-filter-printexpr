@@ -7,7 +7,7 @@ use Filter::Simple;
 use Data::Dumper;
 
 our
-$VERSION = '0.03';
+$VERSION = '0.03_1';
 
 # variable is exposed and my be overwritten by caller
 our $handle = *STDERR;
