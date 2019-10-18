@@ -404,7 +404,7 @@ undefined values should be clearly distinguishable from empty values.
 =back
 
 The first three requirements are not met by C<Smart::Comments> as there is
-an extra efford needed to display a line number,
+an extra effort needed to display a line number,
 the display of a label and the literal expression are mutual exclusive
 and a specific context is not enforced by the module.
 
