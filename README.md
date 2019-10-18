@@ -4,36 +4,32 @@ Debug::Filter::PrintExpr - Convert comment lines to debug print statements
 
 # SYNOPSIS
 
-```perl
-    use Debug::Filter::PrintExpr;
+        use Debug::Filter::PrintExpr;
 
-    my $s = 'a scalar';
-    my @a = qw(this is an array);
-    my %h = (key1 => 'value1', key2 => 'value2');
-    my $ref = \%h;
+        my $s = 'a scalar';
+        my @a = qw(this is an array);
+        my %h = (key1 => 'value1', key2 => 'value2');
+        my $ref = \%h;
 
-    #${$s}
-    #@{@a}
-    #%{ %h}
-    #${ calc: @a * 2 }
-    #\{$ref}
-```
+        #${$s}
+        #@{@a}
+        #%{%h}
+        #${ calc: @a * 2 }
+        #\{$ref}
 
 This program produces an output like this:
 
-```perl
-    line 13: $s = 'a scalar';
-    line 14: @a = ('this', 'is', 'an', 'array');
-    line 15: %h = ('key1' => 'value1', 'key2' => 'value2');
-    calc: @a * 2  = '8';
-    line 17:
-    $ref = {
-      'undef' => undef,
-      'a' => 1,
-      '' => 'empty',
-      'b' => 2
-    };
-```
+        line 13: $s = 'a scalar';
+        line 14: @a = ('this', 'is', 'an', 'array');
+        line 15: %h = ('key1' => 'value1', 'key2' => 'value2');
+        calc: @a * 2  = '8';
+        line 17:
+        $ref = {
+          'undef' => undef,
+          'a' => 1,
+          '' => 'empty',
+          'b' => 2
+        };
 
 # DESCRIPTION
 
@@ -65,9 +61,7 @@ very similar but more advanced.)
 Just by removing the "use" of Debug::Filter::PrintExpr completely
 or disabling it partially by
 
-```
-    no Debug::Filter::PrintExpr;
-```
+        no Debug::Filter::PrintExpr;
 
 all these lines (or a part of them) lose their magic and remain
 simple comments.
@@ -78,17 +72,15 @@ The comment lines to be transformed must follow this format:
 
 or more formally must be matched by the following regexp:
 
-```
-qr{
-       ^\h*\#
-       (?<type>[%@\$\\])
-       \{\h*
-       (?<label>[[:alpha:]_]\w*:)?
-       \h*
-       (?<expr>\V+)?
-       \}\h*$
-}x
-```
+    qr{
+           ^\h*\#
+           (?<type>[%@\$\\])
+           \{\h*
+           (?<label>[[:alpha:]_]\w*:)?
+           \h*
+           (?<expr>\V+)?
+           \}\h*$
+    }x
 
 where `type` represents the sigil, `label` an optional label and
 `expr` an optional expression.
@@ -129,34 +121,26 @@ and inside the #%{} form, arrays are permitted too.
 With the varibles $s, @a and %h as defined above, it is possible
 to use:
 
-```
-    #@{scalar_as_array: $s}
-    #${array_as_scalar :@a}
-    #@{hash_as_array: %h}
-    #%{array_as_hash: @a}
-```
+        #@{scalar_as_array: $s}
+        #${array_as_scalar :@a}
+        #@{hash_as_array: %h}
+        #%{array_as_hash: @a}
 
 and produce these results:
 
-```perl
-    scalar_as_array: $s = ('this is a scalar');
-    array_as_scalar: @a = '4';
-    hash_as_array: %h = ('k1', 'v1', 'k2', 'v2');
-    array_as_hash: @a = ('0' => 'this', '1' => 'is', '2' => 'an', '3' => 'array');
-    
-```
+        scalar_as_array: $s = ('this is a scalar');
+        array_as_scalar: @a = '4';
+        hash_as_array: %h = ('k1', 'v1', 'k2', 'v2');
+        array_as_hash: @a = ('0' => 'this', '1' => 'is', '2' => 'an', '3' => 'array');
+        
 
 Regular expressions may be evaluated too:
 
-```
-    #@{"a<b>c<d><e>f<g>h" =~ /\w*<(\w+)>/g}
-```
+        #@{"a<b>c<d><e>f<g>h" =~ /\w*<(\w+)>/g}
 
 gives:
 
-```
-    line nn: "a<b>c<d><e>f<g>h" =~ /\w*<(\w+)>/g = ('b', 'd', 'e', 'g');
-```
+        line nn: "a<b>c<d><e>f<g>h" =~ /\w*<(\w+)>/g = ('b', 'd', 'e', 'g');
 
 If the expression is omitted, only the label will be printed.
 The sigil `$` should be used in this case.
@@ -185,9 +169,7 @@ about a useless use of something in void context.
 The use-statement for `Debug::Filter::PrintExpr` may contain
 a hash of options:
 
-```perl
-    use Debug::Filter::PrintExpr (-debug => 1);
-```
+        use Debug::Filter::PrintExpr (-debug => 1);
 
 - -debug
 
@@ -224,7 +206,7 @@ implementation.
 - undefined values should be clearly distinguishable from empty values.
 
 The first three requirements are not met by `Smart::Comments` as there is
-an extra efford needed to display a line number,
+an extra effort needed to display a line number,
 the display of a label and the literal expression are mutual exclusive
 and a specific context is not enforced by the module.
 
