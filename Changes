@@ -1,6 +1,9 @@
 Revision history for Debug-Filter-PrintExpr
 
-0.02_1	pending
+0.03	Fri Oct 18 19:18:51 2019 +0200
+		[fix]
+		set perl minversion
+
 		[doc]
 		fixed POD
 
