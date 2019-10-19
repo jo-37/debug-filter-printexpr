@@ -171,7 +171,7 @@ Debug::Filter::PrintExpr - Convert comment lines to debug print statements
 
 	#${$s}
 	#@{@a}
-	#%{%h}
+	#%{ %h}
 	#${ calc: @a * 2 }
 	#\{$ref}
 
