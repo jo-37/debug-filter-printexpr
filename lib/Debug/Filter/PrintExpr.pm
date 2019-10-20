@@ -214,7 +214,7 @@ of implementing Perl filters.
 C<Debug::Filter::PrintExpr> makes use of C<Filter::Simple>
 to transform specially formed comment lines into print statements
 for various debugging purposes.
-(Besides, there is C<Smart::Comments> from Damian, that does something
+(Besides, there is L<Smart::Comments> from Damian, that does something
 very similar but more advanced.)
 
 Just by removing the "use" of Debug::Filter::PrintExpr completely
@@ -368,10 +368,10 @@ The default is STDERR and may be changed by the caller.
 
 =head1 SEE ALSO
 
-Damian Conway's module C<Smart::Comments> provides something similar
+Damian Conway's module L<Smart::Comments> provides something similar
 and more advanced.
 
-While C<Smart::Comments> has lots of features for visualizing the
+While L<Smart::Comments> has lots of features for visualizing the
 program flow, this module focuses on data representation.
 The main requirements for this module were:
 
@@ -403,7 +403,7 @@ undefined values should be clearly distinguishable from empty values.
 
 =back
 
-The first three requirements are not met by C<Smart::Comments> as there is
+The first three requirements are not met by L<Smart::Comments> as there is
 an extra effort needed to display a line number,
 the display of a label and the literal expression are mutual exclusive
 and a specific context is not enforced by the module.

@@ -59,7 +59,7 @@ of implementing Perl filters.
 `Debug::Filter::PrintExpr` makes use of `Filter::Simple`
 to transform specially formed comment lines into print statements
 for various debugging purposes.
-(Besides, there is `Smart::Comments` from Damian, that does something
+(Besides, there is [Smart::Comments](https://metacpan.org/pod/Smart::Comments) from Damian, that does something
 very similar but more advanced.)
 
 Just by removing the "use" of Debug::Filter::PrintExpr completely
@@ -206,10 +206,10 @@ a hash of options:
 
 # SEE ALSO
 
-Damian Conway's module `Smart::Comments` provides something similar
+Damian Conway's module [Smart::Comments](https://metacpan.org/pod/Smart::Comments) provides something similar
 and more advanced.
 
-While `Smart::Comments` has lots of features for visualizing the
+While [Smart::Comments](https://metacpan.org/pod/Smart::Comments) has lots of features for visualizing the
 program flow, this module focuses on data representation.
 The main requirements for this module were:
 
@@ -223,7 +223,7 @@ implementation.
 - Trailing whitespace in values should be clearly visible.
 - undefined values should be clearly distinguishable from empty values.
 
-The first three requirements are not met by `Smart::Comments` as there is
+The first three requirements are not met by [Smart::Comments](https://metacpan.org/pod/Smart::Comments) as there is
 an extra effort needed to display a line number,
 the display of a label and the literal expression are mutual exclusive
 and a specific context is not enforced by the module.
