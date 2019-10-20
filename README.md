@@ -53,16 +53,16 @@ this leads to a similar solution in Perl.
 
 ## A Solution
 
-The `Filter::Simple` module by Damian Conway provides a convenient way
+The [Filter::Simple](https://metacpan.org/pod/Filter::Simple) module by Damian Conway provides a convenient way
 of implementing Perl filters.
 
-`Debug::Filter::PrintExpr` makes use of `Filter::Simple`
+`Debug::Filter::PrintExpr` makes use of [Filter::Simple](https://metacpan.org/pod/Filter::Simple)
 to transform specially formed comment lines into print statements
 for various debugging purposes.
 (Besides, there is [Smart::Comments](https://metacpan.org/pod/Smart::Comments) from Damian, that does something
 very similar but more advanced.)
 
-Just by removing the "use" of Debug::Filter::PrintExpr completely
+Just by removing the "use" of `Debug::Filter::PrintExpr` completely
 or disabling it partially by
 
 ```
@@ -118,7 +118,7 @@ and the output format of the result:
 - \\
 
     The expression shall be a list of references.
-    These will be evaluated using `Data::Dumper`.
+    These will be evaluated using [Data::Dumper](https://metacpan.org/pod/Data::Dumper).
 
 Undefined values are presented by the (unquoted) String `undef`.
 References are presented unquoted in their native representation
@@ -180,7 +180,7 @@ hash and sigil from the PrintExpr line:
 The resulting code must still be valid and should only emit a warning
 about a useless use of something in void context.
 
-## Arguments to Debug::Filter::PrintExpr
+## Arguments to `Debug::Filter::PrintExpr`
 
 The use-statement for `Debug::Filter::PrintExpr` may contain
 a hash of options:
@@ -193,7 +193,7 @@ a hash of options:
 
     When this option is set to true, the resulting source code after
     comment transformation is written to the default output file handle.
-    Only the parts of source where Debug::Filter::PrintExpr is in effect
+    Only the parts of source where `Debug::Filter::PrintExpr` is in effect
     are printed out.
 
 ## Variables
@@ -218,7 +218,7 @@ The main requirements for this module were:
 - Give a defined context where the expression is evaluated.
 Especially provide scalar and list context or perform an iteration
 over a while-each-loop.
-The usage of `Data::Dumper` was adopted later from Damian's
+The usage of [Data::Dumper](https://metacpan.org/pod/Data::Dumper) was adopted later from Damian's
 implementation.
 - Trailing whitespace in values should be clearly visible.
 - undefined values should be clearly distinguishable from empty values.

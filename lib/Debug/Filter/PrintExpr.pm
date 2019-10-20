@@ -208,16 +208,16 @@ this leads to a similar solution in Perl.
 
 =head2 A Solution
 
-The C<Filter::Simple> module by Damian Conway provides a convenient way
+The L<Filter::Simple> module by Damian Conway provides a convenient way
 of implementing Perl filters.
 
-C<Debug::Filter::PrintExpr> makes use of C<Filter::Simple>
+C<Debug::Filter::PrintExpr> makes use of L<Filter::Simple>
 to transform specially formed comment lines into print statements
 for various debugging purposes.
 (Besides, there is L<Smart::Comments> from Damian, that does something
 very similar but more advanced.)
 
-Just by removing the "use" of Debug::Filter::PrintExpr completely
+Just by removing the "use" of C<Debug::Filter::PrintExpr> completely
 or disabling it partially by
 
 	no Debug::Filter::PrintExpr;
@@ -271,7 +271,7 @@ consists of pairs of the form 'key' => 'value' inside parentheses.
 =item \
 
 The expression shall be a list of references.
-These will be evaluated using C<Data::Dumper>.
+These will be evaluated using L<Data::Dumper>.
 
 =back
 
@@ -335,7 +335,7 @@ hash and sigil from the PrintExpr line:
 The resulting code must still be valid and should only emit a warning
 about a useless use of something in void context.
 
-=head2 Arguments to Debug::Filter::PrintExpr
+=head2 Arguments to C<Debug::Filter::PrintExpr>
 
 The use-statement for C<Debug::Filter::PrintExpr> may contain
 a hash of options:
@@ -348,7 +348,7 @@ a hash of options:
 
 When this option is set to true, the resulting source code after
 comment transformation is written to the default output file handle.
-Only the parts of source where Debug::Filter::PrintExpr is in effect
+Only the parts of source where C<Debug::Filter::PrintExpr> is in effect
 are printed out.
 
 =back
@@ -390,7 +390,7 @@ Always print the literal expression along with its evaluation.
 Give a defined context where the expression is evaluated.
 Especially provide scalar and list context or perform an iteration
 over a while-each-loop.
-The usage of C<Data::Dumper> was adopted later from Damian's
+The usage of L<Data::Dumper> was adopted later from Damian's
 implementation.
 
 =item *
