@@ -9,7 +9,7 @@ Debug::Filter::PrintExpr - Convert comment lines to debug print statements
 
     my $s = 'a scalar';
     my @a = qw(this is an array);
-    my %h = (key1 => 'value1', key2 => 'value2');
+    my %h = (key1 => 'value1', key2 => 'value2', '' => 'empty', undef => undef);
     my $ref = \%h;
 
     #${$s}
