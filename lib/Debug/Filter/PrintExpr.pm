@@ -179,16 +179,15 @@ This program produces an output like this:
 
 	line 13: $s = 'a scalar';
 	line 14: @a = ('this', 'is', 'an', 'array');
-	line 15: %h = ('key1' => 'value1', 'key2' => 'value2');
+	line 15: %h = ('' => 'empty', 'key1' => 'value1', 'key2' => 'value2', 'undef' => undef);
 	calc: @a * 2  = '8';
-	line 17:
+	line 17: 
 	$ref = {
-          'undef' => undef,
-          'a' => 1,
-          '' => 'empty',
-          'b' => 2
-        };
-
+		  '' => 'empty',
+		  'key1' => 'value1',
+		  'key2' => 'value2',
+		  'undef' => undef
+		};
 
 =head1 DESCRIPTION
 
