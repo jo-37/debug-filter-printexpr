@@ -100,7 +100,7 @@ line number in the program.
 The sigil determines the evaluation context for the given expression
 and the output format of the result:
 
-- $
+- `$`
 
     The expression is evaluated in scalar context. Strings and floating
     point numbers are printed inside single quotes, inter numbers are
@@ -112,29 +112,28 @@ and the output format of the result:
     Blessed references are shown by the class they are belong to as
     `blessed(_class_)`.
 
-- @
+- `@`
 
     The expression is evaluated in list context and the elements of the
     list are printed like single scalars, separated by commas and gathered
     in parentheses.
 
-- %
+- `%`
 
     The expression is used as argument in a while-each loop and the output
     consists of pairs of the form 'key' => _value_ inside parentheses.
     _value_ is formatted like a single scalar.
 
-- \\
+- `\`
 
     The expression shall be a list of references.
     These will be evaluated using [Data::Dumper](https://metacpan.org/pod/Data::Dumper).
 
-- "
+- `"`
 
-    The expression is evaluated in scalar context as a string
-    and is printed inside single quotes.
+    The expression is evaluated in scalar context as a string.
 
-- #
+- `#`
 
     The expression is evaluated in scalar context as a numeric value.
     Integer values are printed unquoted and floating point values

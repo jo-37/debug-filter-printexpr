@@ -301,7 +301,7 @@ and the output format of the result:
 
 =over 4
 
-=item $
+=item C<$>
 
 The expression is evaluated in scalar context. Strings and floating
 point numbers are printed inside single quotes, inter numbers are
@@ -313,29 +313,28 @@ as e.g. C<ARRAY(0x19830d0)> or C<HASH(0xccba88)>.
 Blessed references are shown by the class they are belong to as
 C<blessed(I<class>)>.
 
-=item @
+=item C<@>
 
 The expression is evaluated in list context and the elements of the
 list are printed like single scalars, separated by commas and gathered
 in parentheses.
 
-=item %
+=item C<%>
 
 The expression is used as argument in a while-each loop and the output
 consists of pairs of the form 'key' => I<value> inside parentheses.
 I<value> is formatted like a single scalar.
 
-=item \
+=item C<\>
 
 The expression shall be a list of references.
 These will be evaluated using L<Data::Dumper>.
 
-=item "
+=item C<">
 
-The expression is evaluated in scalar context as a string
-and is printed inside single quotes.
+The expression is evaluated in scalar context as a string.
 
-=item #
+=item C<#>
 
 The expression is evaluated in scalar context as a numeric value.
 Integer values are printed unquoted and floating point values
