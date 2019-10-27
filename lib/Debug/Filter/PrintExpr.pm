@@ -310,7 +310,7 @@ representations.
 Undefined values are represented by the unquoted string C<undef>.
 Hash and array references are shown in their usual string representation
 as e.g. C<ARRAY(0x19830d0)> or C<HASH(0xccba88)>.
-Blessed references are shown by the class they are belong as
+Blessed references are shown by the class they are belong to as
 C<blessed(I<class>)>.
 
 =item @
