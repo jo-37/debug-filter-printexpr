@@ -26,7 +26,8 @@ sub _genprefix {
 sub _singlevalue {
 	my $val = shift;
 	my $dual = isdual($val);
-	my $str = "$val";
+	my $str;
+	$str = "$val" if defined $val;
 	my $purestring = !$dual && !isdual($val);
 	if (my $class = blessed($val)) {
 		return "blessed($class)";
