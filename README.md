@@ -11,6 +11,7 @@ Debug::Filter::PrintExpr - Convert comment lines to debug print statements
     my @a = qw(this is an array);
     my %h = (key1 => 'value1', key2 => 'value2', '' => 'empty', undef => undef);
     my $ref = \%h;
+    
 
     #${$s}
     #@{@a}
@@ -25,7 +26,7 @@ This program produces an output like this:
     line 13: $s = 'a scalar';
     line 14: @a = ('this', 'is', 'an', 'array');
     line 15: %h = ('' => 'empty', 'key1' => 'value1', 'key2' => 'value2', 'undef' => undef);
-    calc: @a * 2  = '8';
+    calc: @a * 2  = 8;
     line 17: 
     $ref = {
               '' => 'empty',
@@ -81,7 +82,7 @@ or more formally must be matched by the following regexp:
 ```
 qr{
        ^\h*\#
-       (?<type>[%@\$\\])
+       (?<type>[%@\$\\"#])
        \{\h*
        (?<label>[[:alpha:]_]\w*:)?
        \h*
@@ -101,8 +102,10 @@ and the output format of the result:
 
 - $
 
-    The expression is evaluated in scalar context and printed inside
-    single quotes;
+    The expression is evaluated in scalar context. Strings and floating
+    point numbers are printed inside single quotes, inter numbers are
+    printed unquoted and dual valued variables will be shown in both
+    representations.
 
 - @
 
@@ -120,9 +123,21 @@ and the output format of the result:
     The expression shall be a list of references.
     These will be evaluated using [Data::Dumper](https://metacpan.org/pod/Data::Dumper).
 
+- "
+
+    The expression is evaluated in scalar context as a string
+    and is printed inside single quotes.
+
+- #
+
+    The expression is evaluated in scalar context as a numeric value.
+    Integer values are printed unquoted and floating point values
+    inside single quotes.
+
 Undefined values are presented by the (unquoted) String `undef`.
 References are presented unquoted in their native representation
 e.g. as ARRAY(0x19830d0).
+Blessed references are presented in the form `blessed(_class_)`.
 
 The forms #${} and #@{} may be used for any type of expression
 and inside the #%{} form, arrays are permitted too.
