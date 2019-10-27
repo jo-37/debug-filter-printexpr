@@ -8,7 +8,7 @@ use Scalar::Util qw(isdual blessed);
 use Data::Dumper;
 
 our
-$VERSION = '0.04';
+$VERSION = '0.04_1';
 
 local ($,, $\);
 
