@@ -1,5 +1,5 @@
 Revision history for Debug-Filter-PrintExpr
-0.03_1	pending
+0.04	Sun Oct 27 21:36:21 2019 +0100
 		[pod]
 		jekyll fails on '{%' in a code block, so avoid this in POD
 		fix example code for given output
