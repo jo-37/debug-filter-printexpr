@@ -304,9 +304,9 @@ and the output format of the result:
 =item C<$>
 
 The expression is evaluated in scalar context. Strings and floating
-point numbers are printed inside single quotes, inter numbers are
-printed unquoted and dual valued variables will be shown in both
-representations.
+point numbers are printed inside single quotes, integer numbers are
+printed unquoted and dual valued variables are shown in both
+representations seperated by a colon.
 Undefined values are represented by the unquoted string C<undef>.
 Hash and array references are shown in their usual string representation
 as e.g. C<ARRAY(0x19830d0)> or C<HASH(0xccba88)>.
@@ -337,8 +337,6 @@ The expression is evaluated in scalar context as a string.
 =item C<#>
 
 The expression is evaluated in scalar context as a numeric value.
-Integer values are printed unquoted and floating point values
-inside single quotes.
 
 =back
 
