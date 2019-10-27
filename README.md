@@ -137,6 +137,22 @@ and the output format of the result:
 
     The expression is evaluated in scalar context as a numeric value.
 
+The usage and difference between `#${}`, `#"{}` and `##{}` is
+best described by example:
+
+```perl
+    my $dt = DateTime->now;
+    #${$dt}         # line nnn: $dt = blessed(DateTime);
+    #"{$dt}         # line nnn: $dt = '2019-10-27T15:54:28';
+
+    my $num = ' 42 ';
+    #${$num}        # line nnn: $num = ' 42 ';
+    $num + 0;
+    #${$num}        # line nnn: $num = ' 42 ' : 42;
+    #"{$num}        # line nnn: $num = ' 42 ';
+    ##{$num}        # line nnn: $num = 42;
+```
+
 The forms #${}, #"{}, ##{} and #@{} may be used for any type of expression
 and inside the #%{} form, arrays are permitted too.
 With the varibles $s, @a and %h as defined above, it is possible
