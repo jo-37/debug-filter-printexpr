@@ -106,17 +106,23 @@ and the output format of the result:
     point numbers are printed inside single quotes, inter numbers are
     printed unquoted and dual valued variables will be shown in both
     representations.
+    Undefined values are represented by the unquoted string `undef`.
+    Hash and array references are shown in their usual string representation
+    as e.g. `ARRAY(0x19830d0)` or `HASH(0xccba88)`.
+    Blessed references are shown by the class they are belong as
+    `blessed(_class_)`.
 
 - @
 
     The expression is evaluated in list context and the elements of the
-    list are printed inside single quotes, separated by commas and gathered
+    list are printed like single scalars, separated by commas and gathered
     in parentheses.
 
 - %
 
     The expression is used as argument in a while-each loop and the output
-    consists of pairs of the form 'key' => 'value' inside parentheses.
+    consists of pairs of the form 'key' => _value_ inside parentheses.
+    _value_ is formatted like a single scalar.
 
 - \\
 
@@ -134,12 +140,7 @@ and the output format of the result:
     Integer values are printed unquoted and floating point values
     inside single quotes.
 
-Undefined values are presented by the (unquoted) String `undef`.
-References are presented unquoted in their native representation
-e.g. as ARRAY(0x19830d0).
-Blessed references are presented in the form `blessed(_class_)`.
-
-The forms #${} and #@{} may be used for any type of expression
+The forms #${}, #"{}, ##{} and #@{} may be used for any type of expression
 and inside the #%{} form, arrays are permitted too.
 With the varibles $s, @a and %h as defined above, it is possible
 to use:
