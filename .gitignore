@@ -6,3 +6,6 @@ Makefile
 *.tar.gz
 pm_to_blib
 .*.swp
+*.bs
+*.c
+*.o
