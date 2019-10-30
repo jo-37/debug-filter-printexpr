@@ -3,12 +3,22 @@ package Debug::Filter::PrintExpr;
 use strict;
 use warnings;
  
+require Exporter;
 use Filter::Simple;
 use Scalar::Util qw(isdual blessed);
 use Data::Dumper;
 
 our
-$VERSION = '0.04_1';
+$VERSION = '0.05';
+
+our @ISA = qw(Exporter);
+
+our @EXPORT_OK = qw(isnumeric isstring);
+
+require XSLoader;
+XSLoader::load('Debug::Filter::PrintExpr', $VERSION);
+
+our $debug;
 
 local ($,, $\);
 
@@ -25,23 +35,24 @@ sub _genprefix {
 
 sub _singlevalue {
 	my $val = shift;
-	my $dual = isdual($val);
-	my $str;
-	$str = "$val" if defined $val;
-	my $purestring = !$dual && !isdual($val);
+	my $copy = $val;
+	my ($str, $num);
+	my $isdual = isdual($val);
+	my $isnumeric = isnumeric($val);
+	$str = "$copy" if defined $copy;
+	$num = $copy + 0 if $isnumeric;
 	if (my $class = blessed($val)) {
 		return "blessed($class)";
 	} elsif (ref($val)) {
 		return $val;
 	} elsif (!defined $val) {
 		return 'undef';
-	} elsif ($dual) {
-		my $num = $val+0;
-		return "'$val' : $num";
-	} elsif ($purestring) {
-		return "'$val'";
+	} elsif ($isdual) {
+		return "'$str' : $num";
+	} elsif ($isnumeric) {
+		return $num;
 	} else {
-		return $val+0;
+		return "'$str'";
 	}
 }
 
@@ -186,7 +197,7 @@ sub _gen_print {
 
 # source code processing happens here
 FILTER {
-	my ($self, %opt) = @_;
+	my ($self) = @_;
 	s/
 		^\h*\#
 		(?<type>[%@\$\\#"])
@@ -196,7 +207,7 @@ FILTER {
 		(?<expr>\V+)?
 		\}\h*\r?$
 	/ _gen_print($self, $+{type}, $+{label}, $+{expr}) /gmex;
-	print STDERR if $opt{-debug};
+	print STDERR if $debug;
 };
 
 1;
@@ -221,7 +232,7 @@ Debug::Filter::PrintExpr - Convert comment lines to debug print statements
 
 	#${$s}
 	#@{@a}
-	#%{ %h}
+	#%{ %h }
 	#${ calc: @a * 2 }
 	#\{$ref}
 
@@ -303,8 +314,8 @@ and the output format of the result:
 
 =item C<$>
 
-The expression is evaluated in scalar context. Strings and floating
-point numbers are printed inside single quotes, integer numbers are
+The expression is evaluated in scalar context. Strings are printed
+inside single quotes, integer and floating point numbers are
 printed unquoted and dual valued variables are shown in both
 representations seperated by a colon.
 Undefined values are represented by the unquoted string C<undef>.
@@ -368,7 +379,7 @@ to use:
 and produce these results:
 
 	scalar_as_array: $s = ('this is a scalar');
-	array_as_scalar: @a = '4';
+	array_as_scalar: @a = 4;
 	hash_as_array: %h = ('k1', 'v1', 'k2', 'v2');
 	array_as_hash: @a = ('0' => 'this', '1' => 'is', '2' => 'an', '3' => 'array');
 	
@@ -411,21 +422,36 @@ hash and sigil from the PrintExpr line:
 The resulting code must still be valid and should only emit a warning
 about a useless use of something in void context.
 
-=head2 Arguments to C<Debug::Filter::PrintExpr>
+=head2 Functions
 
-The use-statement for C<Debug::Filter::PrintExpr> may contain
-a hash of options:
+Some functions that are needed internally by Debug::Filter::PrintExpr
+may be imported into the caller using the usual C<import> syntax:
 
-	use Debug::Filter::PrintExpr (-debug => 1);
+	use Debug::Filter::PrintExpr qw(isstring isnumeric);
 
-=over 4
+=over
 
-=item -debug
+=item C<isstring(I<$var>)>
 
-When this option is set to true, the resulting source code after
-comment transformation is written to the default output file handle.
-Only the parts of source where C<Debug::Filter::PrintExpr> is in effect
-are printed out.
+This function returns true if the "string slot" of I<$var> has a value.
+This is the case when a string value was assigned to the variable,
+the variable has been used (recently) in a string context
+or when the variable is dual-valued.
+
+It will return false for undefined variables, references and
+variables with a numeric value that have never been used in a
+string context.
+
+=item C<isnumeric(I<$var>)>
+
+This function returns true if the "numeric slot" if I<$var> has a
+value.
+This is the case when a numeric value (integer or floating point) was
+assigned to the variable, the variable has been used (recently) in a
+numeric context or when the variable is dual-valued.
+
+It will return false for undefined variables, references and variables
+with a string value that have never been used in numeric context.
 
 =back
 
@@ -438,6 +464,11 @@ are printed out.
 The filehandle that is referenced by this variable is used for
 printing the generated output.
 The default is STDERR and may be changed by the caller.
+
+=item C<$Debug::Filter::PrintExpr::debug>
+
+If this variable has a C<true> value, the filtered source will
+be copied to C<STDERR>.
 
 =back
 
@@ -475,6 +506,10 @@ Trailing whitespace in values should be clearly visible.
 
 =item *
 
+Distinguish between the numeric and string value of a variable.
+
+=item *
+
 undefined values should be clearly distinguishable from empty values.
 
 =back
@@ -486,6 +521,8 @@ and a specific context is not enforced by the module.
 
 All in all, the module presented here is not much more than a
 programming exercise.
+
+Other related modules: L<Scalar::Util>, L<Data::Dumper>
 
 =head1 AUTHOR
 

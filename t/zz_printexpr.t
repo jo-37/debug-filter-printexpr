@@ -1,9 +1,11 @@
 #!perl -T
 use strict;
 use warnings;
+no warnings qw(void numeric);
 use utf8;
 
-use Debug::Filter::PrintExpr (-debug => 0);
+#use Debug::Filter::PrintExpr (-debug => 0);
+use Debug::Filter::PrintExpr;
 use Test2::V0;
 use IO::String;
 use Scalar::Util qw/dualvar/;
@@ -29,7 +31,7 @@ like $result, qr/^line \d+: \$s = '$s';$/, 'string scalar';
 $handle = IO::String->new($result = '');
 my $t = 2;
 {
-	no warnings qw(void);
+	no warnings 'void';
 	#${$s, $t}
 }
 like $result, qr/^line \d+: \$s, \$t = $t;$/, 'list in scalar context';
@@ -110,5 +112,15 @@ like $result, qr/^line \d+: \$dual = 'the answer';$/, 'string value';
 $handle = IO::String->new($result = '');
 ##{$dual}
 like $result, qr/^line \d+: \$dual = 42;$/, 'numeric value';
+
+$handle = IO::String->new($result = '');
+my $fstring = '3.1415962';
+#${$fstring}
+like $result, qr/^line \d+: \$fstring = '$fstring';$/, 'fp string';
+
+$handle = IO::String->new($result = '');
+my $float = 3.1415962;
+#${$float}
+like $result, qr/^line \d+: \$float = $float;$/, 'floating point number';
 
 done_testing;

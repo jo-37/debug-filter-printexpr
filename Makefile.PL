@@ -1,6 +1,8 @@
 use 5.006;
 use strict;
 use warnings FATAL => 'all';
+use Config;
+use File::Spec;
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
@@ -11,6 +13,8 @@ WriteMakefile(
     LICENSE          => 'Perl_5',
     PL_FILES         => {},
     MIN_PERL_VERSION => 5.010,
+	XS		=> {'PrintExpr.xs' => 'PrintExpr.c'},
+	OBJECT	=> 'PrintExpr$(OBJ_EXT)',
     CONFIGURE_REQUIRES => {
         'ExtUtils::MakeMaker' => 0,
     },

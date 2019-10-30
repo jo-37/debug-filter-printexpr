@@ -15,7 +15,7 @@ Debug::Filter::PrintExpr - Convert comment lines to debug print statements
 
     #${$s}
     #@{@a}
-    #%{ %h}
+    #%{ %h }
     #${ calc: @a * 2 }
     #\{$ref}
 ```
@@ -102,8 +102,8 @@ and the output format of the result:
 
 - `$`
 
-    The expression is evaluated in scalar context. Strings and floating
-    point numbers are printed inside single quotes, integer numbers are
+    The expression is evaluated in scalar context. Strings are printed
+    inside single quotes, integer and floating point numbers are
     printed unquoted and dual valued variables are shown in both
     representations seperated by a colon.
     Undefined values are represented by the unquoted string `undef`.
@@ -169,7 +169,7 @@ and produce these results:
 
 ```perl
     scalar_as_array: $s = ('this is a scalar');
-    array_as_scalar: @a = '4';
+    array_as_scalar: @a = 4;
     hash_as_array: %h = ('k1', 'v1', 'k2', 'v2');
     array_as_hash: @a = ('0' => 'this', '1' => 'is', '2' => 'an', '3' => 'array');
     
@@ -209,21 +209,36 @@ hash and sigil from the PrintExpr line:
 The resulting code must still be valid and should only emit a warning
 about a useless use of something in void context.
 
-## Arguments to `Debug::Filter::PrintExpr`
+## Functions
 
-The use-statement for `Debug::Filter::PrintExpr` may contain
-a hash of options:
+Some functions that are needed internally by Debug::Filter::PrintExpr
+may be imported into the caller using the usual `import` syntax:
 
 ```perl
-    use Debug::Filter::PrintExpr (-debug => 1);
+    use Debug::Filter::PrintExpr qw(isstring isnumeric);
 ```
 
-- -debug
+- `isstring(_$var_)`
 
-    When this option is set to true, the resulting source code after
-    comment transformation is written to the default output file handle.
-    Only the parts of source where `Debug::Filter::PrintExpr` is in effect
-    are printed out.
+    This function returns true if the "string slot" of _$var_ has a value.
+    This is the case when a string value was assigned to the variable,
+    the variable has been used (recently) in a string context
+    or when the variable is dual-valued.
+
+    It will return false for undefined variables, references and
+    variables with a numeric value that have never been used in a
+    string context.
+
+- `isnumeric(_$var_)`
+
+    This function returns true if the "numeric slot" if _$var_ has a
+    value.
+    This is the case when a numeric value (integer or floating point) was
+    assigned to the variable, the variable has been used (recently) in a
+    numeric context or when the variable is dual-valued.
+
+    It will return false for undefined variables, references and variables
+    with a string value that have never been used in numeric context.
 
 ## Variables
 
@@ -232,6 +247,11 @@ a hash of options:
     The filehandle that is referenced by this variable is used for
     printing the generated output.
     The default is STDERR and may be changed by the caller.
+
+- `$Debug::Filter::PrintExpr::debug`
+
+    If this variable has a `true` value, the filtered source will
+    be copied to `STDERR`.
 
 # SEE ALSO
 
@@ -250,6 +270,7 @@ over a while-each-loop.
 The usage of [Data::Dumper](https://metacpan.org/pod/Data::Dumper) was adopted later from Damian's
 implementation.
 - Trailing whitespace in values should be clearly visible.
+- Distinguish between the numeric and string value of a variable.
 - undefined values should be clearly distinguishable from empty values.
 
 The first three requirements are not met by [Smart::Comments](https://metacpan.org/pod/Smart::Comments) as there is
@@ -259,6 +280,8 @@ and a specific context is not enforced by the module.
 
 All in all, the module presented here is not much more than a
 programming exercise.
+
+Other related modules: [Scalar::Util](https://metacpan.org/pod/Scalar::Util), [Data::Dumper](https://metacpan.org/pod/Data::Dumper)
 
 # AUTHOR
 
