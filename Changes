@@ -1,10 +1,11 @@
 Revision history for Debug-Filter-PrintExpr
 0.04_1	Wed Oct 30 17:15:55 2019 +0100
 		[feature]
-		- new XS functions to differenciate between numeric and string
-		  value
-		- debug no longer via use statement
-		- isstring() and isnumeric() available for import into caller
+		new XS functions to differenciate between numeric and string value
+
+		debug no longer via use statement
+
+		isstring() and isnumeric() available for import into caller
 
 0.04	Sun Oct 27 21:36:21 2019 +0100
 		[pod]
