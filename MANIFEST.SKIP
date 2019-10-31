@@ -19,3 +19,4 @@ _config.yml
 ^README.md
 ^t/boilerplate.t
 ^t/pod-coverage.t
+^test.pl
