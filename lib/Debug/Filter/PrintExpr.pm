@@ -35,12 +35,11 @@ sub _genprefix {
 
 sub _singlevalue {
 	my $val = shift;
-	my $copy = $val;
 	my ($str, $num);
 	my $isdual = isdual($val);
 	my $isnumeric = isnumeric($val);
-	$str = "$copy" if defined $copy;
-	$num = $copy + 0 if $isnumeric;
+	$str = "$val" if defined $val;
+	$num = $val + 0 if $isnumeric;
 	if (my $class = blessed($val)) {
 		return "blessed($class)";
 	} elsif (ref($val)) {
