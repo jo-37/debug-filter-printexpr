@@ -3,7 +3,6 @@ package Debug::Filter::PrintExpr;
 use strict;
 use warnings;
  
-require Exporter;
 use Filter::Simple;
 use Scalar::Util qw(isdual blessed);
 use Data::Dumper;
@@ -11,14 +10,8 @@ use Data::Dumper;
 our
 $VERSION = '0.05_1';
 
-our @ISA = qw(Exporter);
-
-our @EXPORT_OK = qw(isnumeric isstring);
-
 require XSLoader;
 XSLoader::load('Debug::Filter::PrintExpr', $VERSION);
-
-our $debug;
 
 local ($,, $\);
 
@@ -40,12 +33,12 @@ sub _singlevalue {
 	my $isnumeric = isnumeric($val);
 	$str = "$val" if defined $val;
 	$num = $val + 0 if $isnumeric;
-	if (my $class = blessed($val)) {
+	if (!defined $val) {
+		return 'undef';
+	} elsif (my $class = blessed($val)) {
 		return "blessed($class)";
 	} elsif (ref($val)) {
 		return $val;
-	} elsif (!defined $val) {
-		return 'undef';
 	} elsif ($isdual) {
 		return "'$str' : $num";
 	} elsif ($isnumeric) {
@@ -96,8 +89,8 @@ sub _printscalar {
 	my ($self, $label, $line, $expr, $value) = @_;
 	local ($,, $\);
 	_genprefix @_;
-	_valuescalar($_[4]) if defined $value;
-	print $handle ';' if defined $value;
+	_valuescalar($_[4]) if $expr;
+	print $handle ';' if $expr;
 	print $handle "\n";
 }
 
@@ -166,11 +159,11 @@ sub _gen_print {
 	} elsif ($type eq '"') {
 		my $print = $self . "::_printstr";
 		$expr ||= '';
-		return qq[{$print("$self", "$label", __LINE__, q{$expr}, scalar(($expr)));}];
+		return qq[{$print("$self", "$label", __LINE__, q{$expr}, scalar($expr));}];
 	} elsif ($type eq '#') {
 		my $print = $self . "::_printnum";
 		$expr ||= '';
-		return qq[{$print("$self", "$label", __LINE__, q{$expr}, scalar(($expr)));}];
+		return qq[{$print("$self", "$label", __LINE__, q{$expr}, scalar($expr));}];
 	} elsif ($type eq '@') {
 		my $print = $self . "::_printarray";
 		return qq[{$print("$self", "$label", __LINE__, q{$expr}, $expr);}];
@@ -196,7 +189,7 @@ sub _gen_print {
 
 # source code processing happens here
 FILTER {
-	my ($self) = @_;
+	my ($self, %opts) = @_;
 	s/
 		^\h*\#
 		(?<type>[%@\$\\#"])
@@ -206,7 +199,7 @@ FILTER {
 		(?<expr>\V+)?
 		\}\h*\r?$
 	/ _gen_print($self, $+{type}, $+{label}, $+{expr}) /gmex;
-	print STDERR if $debug;
+	print STDERR if $opts{-debug};
 };
 
 1;
@@ -354,15 +347,15 @@ The usage and difference between C<#${}>, C<#"{}> and C<##{}> is
 best described by example:
 
 	my $dt = DateTime->now;
-	#${$dt}		# line nnn: $dt = blessed(DateTime);
-	#"{$dt}		# line nnn: $dt = '2019-10-27T15:54:28';
+	#${$dt}		# line nn: $dt = blessed(DateTime);
+	#"{$dt}		# line nn: $dt = '2019-10-27T15:54:28';
 
 	my $num = ' 42 ';
-	#${$num}	# line nnn: $num = ' 42 ';
+	#${$num}	# line nn: $num = ' 42 ';
 	$num + 0;
-	#${$num}	# line nnn: $num = ' 42 ' : 42;
-	#"{$num}	# line nnn: $num = ' 42 ';
-	##{$num}	# line nnn: $num = 42;
+	#${$num}	# line nn: $num = ' 42 ' : 42;
+	#"{$num}	# line nn: $num = ' 42 ';
+	##{$num}	# line nn: $num = 42;
 
 
 The forms #${}, #"{}, ##{} and #@{} may be used for any type of expression
@@ -421,12 +414,40 @@ hash and sigil from the PrintExpr line:
 The resulting code must still be valid and should only emit a warning
 about a useless use of something in void context.
 
+=head2 Usage
+
+The use-statement for C<Debug::Filter::PrintExpr> may contain
+a hash of options:
+
+	use Debug::Filter::PrintExpr (-debug => 1);
+
+=over 4
+
+=item -debug
+
+When this option is set to true, the resulting source code after
+comment transformation is written to C<STDERR>.
+Only the parts of source where C<Debug::Filter::PrintExpr> is in effect
+are printed out.
+
+=back
+
 =head2 Functions
 
 Some functions that are needed internally by Debug::Filter::PrintExpr
-may be imported into the caller using the usual C<import> syntax:
+may be used by the caller either by fully qualifying or by aliasing
+into the own package:
 
-	use Debug::Filter::PrintExpr qw(isstring isnumeric);
+	$isstring = Debug::Filter::PrintExpr::isstring($var);
+	$isnumeric = Debug::Filter::PrintExpr::isnumeric($var);
+
+	*::isstring = \& Debug::Filter::PrintExpr::isstring;
+	*::isnumeric = \& Debug::Filter::PrintExpr::isnumeric;
+	$isstring = isstring($var);
+	$isnumeric = isnumeric($var);
+
+Importing these functions by specifying their names as parameters
+to the C<use Debug::Filter::PrintExpr> statement doesn't work (yet).
 
 =over
 
@@ -463,11 +484,6 @@ with a string value that have never been used in numeric context.
 The filehandle that is referenced by this variable is used for
 printing the generated output.
 The default is STDERR and may be changed by the caller.
-
-=item C<$Debug::Filter::PrintExpr::debug>
-
-If this variable has a C<true> value, the filtered source will
-be copied to C<STDERR>.
 
 =back
 

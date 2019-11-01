@@ -142,15 +142,15 @@ best described by example:
 
 ```perl
     my $dt = DateTime->now;
-    #${$dt}         # line nnn: $dt = blessed(DateTime);
-    #"{$dt}         # line nnn: $dt = '2019-10-27T15:54:28';
+    #${$dt}         # line nn: $dt = blessed(DateTime);
+    #"{$dt}         # line nn: $dt = '2019-10-27T15:54:28';
 
     my $num = ' 42 ';
-    #${$num}        # line nnn: $num = ' 42 ';
+    #${$num}        # line nn: $num = ' 42 ';
     $num + 0;
-    #${$num}        # line nnn: $num = ' 42 ' : 42;
-    #"{$num}        # line nnn: $num = ' 42 ';
-    ##{$num}        # line nnn: $num = 42;
+    #${$num}        # line nn: $num = ' 42 ' : 42;
+    #"{$num}        # line nn: $num = ' 42 ';
+    ##{$num}        # line nn: $num = 42;
 ```
 
 The forms #${}, #"{}, ##{} and #@{} may be used for any type of expression
@@ -209,14 +209,40 @@ hash and sigil from the PrintExpr line:
 The resulting code must still be valid and should only emit a warning
 about a useless use of something in void context.
 
+## Usage
+
+The use-statement for `Debug::Filter::PrintExpr` may contain
+a hash of options:
+
+```perl
+    use Debug::Filter::PrintExpr (-debug => 1);
+```
+
+- -debug
+
+    When this option is set to true, the resulting source code after
+    comment transformation is written to `STDERR`.
+    Only the parts of source where `Debug::Filter::PrintExpr` is in effect
+    are printed out.
+
 ## Functions
 
 Some functions that are needed internally by Debug::Filter::PrintExpr
-may be imported into the caller using the usual `import` syntax:
+may be used by the caller either by fully qualifying or by aliasing
+into the own package:
 
-```perl
-    use Debug::Filter::PrintExpr qw(isstring isnumeric);
 ```
+    $isstring = Debug::Filter::PrintExpr::isstring($var);
+    $isnumeric = Debug::Filter::PrintExpr::isnumeric($var);
+
+    *::isstring = \& Debug::Filter::PrintExpr::isstring;
+    *::isnumeric = \& Debug::Filter::PrintExpr::isnumeric;
+    $isstring = isstring($var);
+    $isnumeric = isnumeric($var);
+```
+
+Importing these functions by specifying their names as parameters
+to the `use Debug::Filter::PrintExpr` statement doesn't work (yet).
 
 - `isstring(_$var_)`
 
@@ -247,11 +273,6 @@ may be imported into the caller using the usual `import` syntax:
     The filehandle that is referenced by this variable is used for
     printing the generated output.
     The default is STDERR and may be changed by the caller.
-
-- `$Debug::Filter::PrintExpr::debug`
-
-    If this variable has a `true` value, the filtered source will
-    be copied to `STDERR`.
 
 # SEE ALSO
 

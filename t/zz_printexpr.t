@@ -122,4 +122,9 @@ my $float = 3.1415962;
 #${$float}
 like $result, qr/^line \d+: \$float = $float;$/, 'floating point number';
 
+$handle = IO::String->new($result = '');
+
+#${undef}
+like $result, qr/^line \d+: undef = undef;$/, 'undef';
+
 done_testing;
