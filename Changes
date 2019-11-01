@@ -1,4 +1,13 @@
 Revision history for Debug-Filter-PrintExpr
+0.05_1	tbd
+		[fix]
+		treat undefined values
+
+		[feature]
+		remove exports as they conflict with debug
+
+		restore old -debug argument to "use"
+		
 0.05	Wed Oct 30 21:27:44 2019 +0100
 		[feature]
 		new XS functions to differenciate between numeric and string value
