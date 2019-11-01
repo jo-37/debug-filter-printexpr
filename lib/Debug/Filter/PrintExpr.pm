@@ -8,7 +8,7 @@ use Scalar::Util qw(isdual blessed);
 use Data::Dumper;
 
 our
-$VERSION = '0.05_1';
+$VERSION = '0.06';
 
 require XSLoader;
 XSLoader::load('Debug::Filter::PrintExpr', $VERSION);
