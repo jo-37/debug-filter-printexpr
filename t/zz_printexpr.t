@@ -4,7 +4,6 @@ use warnings;
 no warnings qw(void numeric);
 use utf8;
 
-#use Debug::Filter::PrintExpr (-debug => 0);
 use Debug::Filter::PrintExpr;
 use Test2::V0;
 use IO::String;
