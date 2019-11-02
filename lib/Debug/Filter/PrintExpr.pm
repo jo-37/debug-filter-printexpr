@@ -10,7 +10,7 @@ use Scalar::Util qw(isdual blessed);
 use Data::Dumper;
 
 our
-$VERSION = '0.07';
+$VERSION = '0.07_1';
 
 our @EXPORT_OK = qw(debug isnumeric isstring);
 our @EXPORT_FAIL = qw(debug);
