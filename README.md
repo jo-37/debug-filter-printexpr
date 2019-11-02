@@ -211,38 +211,28 @@ about a useless use of something in void context.
 
 ## Usage
 
-The use-statement for `Debug::Filter::PrintExpr` may contain
-a hash of options:
+The use-statement for `Debug::Filter::PrintExpr` may contain a
+list of imports:
 
 ```perl
-    use Debug::Filter::PrintExpr (-debug => 1);
+    use Debug::Filter::PrintExpr qw(debug isnumeric isstring);
 ```
 
-- -debug
+- debug
 
-    When this option is set to true, the resulting source code after
-    comment transformation is written to `STDERR`.
+    This will not import any symbol into the caller's namespace.
+    Instead, the resulting source code after comment transformation
+    is written to `STDERR`.
     Only the parts of source where `Debug::Filter::PrintExpr` is in effect
     are printed out.
 
+- isnumeric
+- isstring
+
+    The functions `isnumeric` and/or `isstring` may be imported
+    into the caller.
+
 ## Functions
-
-Some functions that are needed internally by Debug::Filter::PrintExpr
-may be used by the caller either by fully qualifying or by aliasing
-into the own package:
-
-```
-    $isstring = Debug::Filter::PrintExpr::isstring($var);
-    $isnumeric = Debug::Filter::PrintExpr::isnumeric($var);
-
-    *::isstring = \& Debug::Filter::PrintExpr::isstring;
-    *::isnumeric = \& Debug::Filter::PrintExpr::isnumeric;
-    $isstring = isstring($var);
-    $isnumeric = isnumeric($var);
-```
-
-Importing these functions by specifying their names as parameters
-to the `use Debug::Filter::PrintExpr` statement doesn't work (yet).
 
 - `isstring(_$var_)`
 

@@ -3,12 +3,9 @@ use strict;
 use warnings;
 use utf8;
 
-use Debug::Filter::PrintExpr;
+use Debug::Filter::PrintExpr qw(isstring isnumeric);
 use Test2::V0;
 use Scalar::Util qw(dualvar);
-
-*::isstring = \&Debug::Filter::PrintExpr::isstring;
-*::isnumeric = \&Debug::Filter::PrintExpr::isnumeric;
 
 my $alphastr = "lkdfj";
 ok(isstring($alphastr), 'alphastr is a string');

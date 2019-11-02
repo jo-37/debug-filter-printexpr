@@ -3,17 +3,27 @@ package Debug::Filter::PrintExpr;
 use strict;
 use warnings;
  
+use Exporter qw(import);
+
 use Filter::Simple;
 use Scalar::Util qw(isdual blessed);
 use Data::Dumper;
 
 our
-$VERSION = '0.06_1';
+$VERSION = '0.07';
+
+our @EXPORT_OK = qw(debug isnumeric isstring);
+our @EXPORT_FAIL = qw(debug);
+our @ISA = qw(Exporter);
 
 require XSLoader;
 XSLoader::load('Debug::Filter::PrintExpr', $VERSION);
 
 local ($,, $\);
+
+sub export_fail {
+	return ();
+}
 
 # variable is exposed and my be overwritten by caller
 our $handle = *STDERR;
@@ -189,7 +199,8 @@ sub _gen_print {
 
 # source code processing happens here
 FILTER {
-	my ($self, %opts) = @_;
+	my ($self, @args) = @_;
+	my $debug = grep /^debug$/, @args;
 	s/
 		^\h*\#
 		(?<type>[%@\$\\#"])
@@ -199,7 +210,7 @@ FILTER {
 		(?<expr>\V+)?
 		\}\h*\r?$
 	/ _gen_print($self, $+{type}, $+{label}, $+{expr}) /gmex;
-	print STDERR if $opts{-debug};
+	print STDERR if $debug;
 };
 
 1;
@@ -416,38 +427,31 @@ about a useless use of something in void context.
 
 =head2 Usage
 
-The use-statement for C<Debug::Filter::PrintExpr> may contain
-a hash of options:
+The use-statement for C<Debug::Filter::PrintExpr> may contain a
+list of imports:
 
-	use Debug::Filter::PrintExpr (-debug => 1);
+	use Debug::Filter::PrintExpr qw(debug isnumeric isstring);
 
 =over 4
 
-=item -debug
+=item debug
 
-When this option is set to true, the resulting source code after
-comment transformation is written to C<STDERR>.
+This will not import any symbol into the caller's namespace.
+Instead, the resulting source code after comment transformation
+is written to C<STDERR>.
 Only the parts of source where C<Debug::Filter::PrintExpr> is in effect
 are printed out.
+
+=item isnumeric
+
+=item isstring
+
+The functions C<isnumeric> and/or C<isstring> may be imported
+into the caller.
 
 =back
 
 =head2 Functions
-
-Some functions that are needed internally by Debug::Filter::PrintExpr
-may be used by the caller either by fully qualifying or by aliasing
-into the own package:
-
-	$isstring = Debug::Filter::PrintExpr::isstring($var);
-	$isnumeric = Debug::Filter::PrintExpr::isnumeric($var);
-
-	*::isstring = \& Debug::Filter::PrintExpr::isstring;
-	*::isnumeric = \& Debug::Filter::PrintExpr::isnumeric;
-	$isstring = isstring($var);
-	$isnumeric = isnumeric($var);
-
-Importing these functions by specifying their names as parameters
-to the C<use Debug::Filter::PrintExpr> statement doesn't work (yet).
 
 =over
 
