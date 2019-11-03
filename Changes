@@ -1,4 +1,8 @@
 Revision history for Debug-Filter-PrintExpr
+0.09	Sun Nov 3 23:08:21 2019 +0100
+		[fix]
+		updated MANIFEST
+
 0.08	Sun Nov 3 18:24:21 2019 +0100
 		[feature]
 		change "debug" to "-debug" and remove Exporter hack
