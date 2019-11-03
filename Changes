@@ -1,5 +1,5 @@
 Revision history for Debug-Filter-PrintExpr
-0.07_1	tbd
+0.08	Sun Nov 3 18:24:21 2019 +0100
 		[feature]
 		change "debug" to "-debug" and remove Exporter hack
 
