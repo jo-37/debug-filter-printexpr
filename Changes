@@ -1,4 +1,8 @@
 Revision history for Debug-Filter-PrintExpr
+0.07_1	tbd
+		[feature]
+		change "debug" to "-debug" and remove Exporter hack
+
 0.07	Sat Nov 2 19:07:37 2019 +0100
 		[feature]
 		make isstring and isnumeric exportable
