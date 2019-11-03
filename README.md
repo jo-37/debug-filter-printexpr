@@ -212,17 +212,16 @@ about a useless use of something in void context.
 ## Usage
 
 The use-statement for `Debug::Filter::PrintExpr` may contain a
-list of imports:
+list of imports and/or options:
 
 ```perl
-    use Debug::Filter::PrintExpr qw(debug isnumeric isstring);
+    use Debug::Filter::PrintExpr qw(-debug isnumeric isstring);
 ```
 
-- debug
+- -debug
 
-    This will not import any symbol into the caller's namespace.
-    Instead, the resulting source code after comment transformation
-    is written to `STDERR`.
+    This option causes  the resulting source code after comment
+    transformation to be written to `STDERR`.
     Only the parts of source where `Debug::Filter::PrintExpr` is in effect
     are printed out.
 
