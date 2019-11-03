@@ -3,7 +3,7 @@ package Debug::Filter::PrintExpr;
 use strict;
 use warnings;
  
-use Exporter qw(import);
+require Exporter;
 
 use Filter::Simple;
 use Scalar::Util qw(isdual blessed);
@@ -12,8 +12,7 @@ use Data::Dumper;
 our
 $VERSION = '0.07_1';
 
-our @EXPORT_OK = qw(debug isnumeric isstring);
-our @EXPORT_FAIL = qw(debug);
+our @EXPORT_OK = qw(isnumeric isstring);
 our @ISA = qw(Exporter);
 
 require XSLoader;
@@ -21,8 +20,12 @@ XSLoader::load('Debug::Filter::PrintExpr', $VERSION);
 
 local ($,, $\);
 
-sub export_fail {
-	return ();
+sub import {
+	my $class = shift;
+	# remove options from import list
+	my @args = map {/^-\w+$/ ? () : $_} @_;
+	$class->export_to_level(1, $class, @args);
+	return;
 }
 
 # variable is exposed and my be overwritten by caller
@@ -200,7 +203,7 @@ sub _gen_print {
 # source code processing happens here
 FILTER {
 	my ($self, @args) = @_;
-	my $debug = grep /^debug$/, @args;
+	my $debug = grep /^-debug$/, @args;
 	s/
 		^\h*\#
 		(?<type>[%@\$\\#"])
@@ -428,17 +431,16 @@ about a useless use of something in void context.
 =head2 Usage
 
 The use-statement for C<Debug::Filter::PrintExpr> may contain a
-list of imports:
+list of imports and/or options:
 
-	use Debug::Filter::PrintExpr qw(debug isnumeric isstring);
+	use Debug::Filter::PrintExpr qw(-debug isnumeric isstring);
 
 =over 4
 
-=item debug
+=item -debug
 
-This will not import any symbol into the caller's namespace.
-Instead, the resulting source code after comment transformation
-is written to C<STDERR>.
+This option causes  the resulting source code after comment
+transformation to be written to C<STDERR>.
 Only the parts of source where C<Debug::Filter::PrintExpr> is in effect
 are printed out.
 
