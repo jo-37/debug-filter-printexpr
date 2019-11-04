@@ -206,15 +206,12 @@ FILTER {
 	my ($self, @args) = @_;
 	my ($nofilter, $debug);
 	if (ref($_[1]) eq 'HASH') {
-		print STDERR "found global hash\n";
 		my $global = $_[1];
 		$debug = $global->{debug};
 		$nofilter = $global->{nofilter};
 	}
 	$debug ||= grep /^-debug$/, @args;
 	$nofilter ||= grep /^-nofilter$/, @args;
-	print STDERR "debug enabled\n" if $debug;
-	print STDERR "filter disabled\n" if $nofilter;
 	s/
 		^\h*\#
 		(?<type>[%@\$\\#"])
