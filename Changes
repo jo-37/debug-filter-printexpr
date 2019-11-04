@@ -1,4 +1,12 @@
 Revision history for Debug-Filter-PrintExpr
+0.10	Mon Nov 4 21:18:18 2019 +0100
+		[feature]
+		moved from Exporter to Exporter::Tiny
+
+		new option "nofilter"
+
+		new import tag ":all"
+
 0.09	Sun Nov 3 23:08:21 2019 +0100
 		[fix]
 		updated MANIFEST
