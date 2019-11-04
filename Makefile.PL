@@ -24,6 +24,7 @@ WriteMakefile(
 		'IO::String' => 0,
     },
     PREREQ_PM => {
+		'Exporter::Tiny' => 0.025,
 		'Filter::Simple' => 0,
 		'Data::Dumper' => 0,
 		'Scalar::Util' => 1.26,
