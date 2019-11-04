@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use utf8;
 
-use Debug::Filter::PrintExpr qw(isstring isnumeric);
+use Debug::Filter::PrintExpr {nofilter => 1}, qw(isstring isnumeric);
 use Test2::V0;
 use Scalar::Util qw(dualvar);
 

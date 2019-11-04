@@ -211,25 +211,27 @@ about a useless use of something in void context.
 
 ## Usage
 
-The use-statement for `Debug::Filter::PrintExpr` may contain a
-list of imports and/or options:
+The `use` statement for `Debug::Filter::PrintExpr` may contain
+arguments as described in [Exporter::Tiny::Manual::Importing](https://metacpan.org/pod/Exporter::Tiny::Manual::Importing).
+Importable functions are `isnumeric` and `isstring` as well
+as the import tag `:all` for both of them.
 
-```perl
-    use Debug::Filter::PrintExpr qw(-debug isnumeric isstring);
-```
+The (optional) global options hash may contain
+these module specific entries:
 
-- -debug
+- debug => 1
 
-    This option causes  the resulting source code after comment
+    This option causes the resulting source code after comment
     transformation to be written to `STDERR`.
-    Only the parts of source where `Debug::Filter::PrintExpr` is in effect
-    are printed out.
+    This option may also be specified as `-debug` in the
+    `use` statement.
 
-- isnumeric
-- isstring
+- nofilter => 1
 
-    The functions `isnumeric` and/or `isstring` may be imported
-    into the caller.
+    This options disables source code filtering if only the import
+    of functions is desired.
+    This option may also be specified as `-nofilter` in the
+    `use` statement.
 
 ## Functions
 
@@ -290,6 +292,10 @@ and a specific context is not enforced by the module.
 
 All in all, the module presented here is not much more than a
 programming exercise.
+
+Importing the functions `isstring` and `isnumeric` is done
+by [Exporter::Tiny](https://metacpan.org/pod/Exporter::Tiny).
+For extended options see [Exporter::Tiny::Manual::Importing](https://metacpan.org/pod/Exporter::Tiny::Manual::Importing).
 
 Other related modules: [Scalar::Util](https://metacpan.org/pod/Scalar::Util), [Data::Dumper](https://metacpan.org/pod/Data::Dumper)
 

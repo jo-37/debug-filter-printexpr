@@ -3,7 +3,7 @@ package Debug::Filter::PrintExpr;
 use strict;
 use warnings;
  
-require Exporter;
+use Exporter::Tiny;
 
 use Filter::Simple;
 use Scalar::Util qw(isdual blessed);
@@ -13,7 +13,12 @@ our
 $VERSION = '0.09_1';
 
 our @EXPORT_OK = qw(isnumeric isstring);
-our @ISA = qw(Exporter);
+our @ISA = qw(Exporter::Tiny);
+our %EXPORT_TAGS = (
+	debug => [],
+	nofilter => [],
+	all	=> [qw(isnumeric isstring)],
+);
 
 require XSLoader;
 XSLoader::load('Debug::Filter::PrintExpr', $VERSION);
@@ -21,11 +26,7 @@ XSLoader::load('Debug::Filter::PrintExpr', $VERSION);
 local ($,, $\);
 
 sub import {
-	my $class = shift;
-	# remove options from import list
-	my @args = map {/^-\w+$/ ? () : $_} @_;
-	$class->export_to_level(1, $class, @args);
-	return;
+	goto \&Exporter::Tiny::import;
 }
 
 # variable is exposed and my be overwritten by caller
@@ -203,7 +204,17 @@ sub _gen_print {
 # source code processing happens here
 FILTER {
 	my ($self, @args) = @_;
-	my $debug = grep /^-debug$/, @args;
+	my ($nofilter, $debug);
+	if (ref($_[1]) eq 'HASH') {
+		print STDERR "found global hash\n";
+		my $global = $_[1];
+		$debug = $global->{debug};
+		$nofilter = $global->{nofilter};
+	}
+	$debug ||= grep /^-debug$/, @args;
+	$nofilter ||= grep /^-nofilter$/, @args;
+	print STDERR "debug enabled\n" if $debug;
+	print STDERR "filter disabled\n" if $nofilter;
 	s/
 		^\h*\#
 		(?<type>[%@\$\\#"])
@@ -212,7 +223,8 @@ FILTER {
 		\h*
 		(?<expr>\V+)?
 		\}\h*\r?$
-	/ _gen_print($self, $+{type}, $+{label}, $+{expr}) /gmex;
+	/ _gen_print($self, $+{type}, $+{label}, $+{expr}) /gmex
+		unless $nofilter;
 	print STDERR if $debug;
 };
 
@@ -430,26 +442,29 @@ about a useless use of something in void context.
 
 =head2 Usage
 
-The use-statement for C<Debug::Filter::PrintExpr> may contain a
-list of imports and/or options:
+The C<use> statement for C<Debug::Filter::PrintExpr> may contain
+arguments as described in L<Exporter::Tiny::Manual::Importing>.
+Importable functions are C<isnumeric> and C<isstring> as well
+as the import tag C<:all> for both of them.
 
-	use Debug::Filter::PrintExpr qw(-debug isnumeric isstring);
+The (optional) global options hash may contain
+these module specific entries:
 
 =over 4
 
-=item -debug
+=item debug => 1
 
-This option causes  the resulting source code after comment
+This option causes the resulting source code after comment
 transformation to be written to C<STDERR>.
-Only the parts of source where C<Debug::Filter::PrintExpr> is in effect
-are printed out.
+This option may also be specified as C<-debug> in the
+C<use> statement.
 
-=item isnumeric
+=item nofilter => 1
 
-=item isstring
-
-The functions C<isnumeric> and/or C<isstring> may be imported
-into the caller.
+This options disables source code filtering if only the import
+of functions is desired.
+This option may also be specified as C<-nofilter> in the
+C<use> statement.
 
 =back
 
@@ -542,6 +557,10 @@ and a specific context is not enforced by the module.
 
 All in all, the module presented here is not much more than a
 programming exercise.
+
+Importing the functions C<isstring> and C<isnumeric> is done
+by L<Exporter::Tiny>.
+For extended options see L<Exporter::Tiny::Manual::Importing>.
 
 Other related modules: L<Scalar::Util>, L<Data::Dumper>
 
