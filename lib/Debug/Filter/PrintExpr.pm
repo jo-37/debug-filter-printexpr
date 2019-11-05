@@ -25,9 +25,8 @@ XSLoader::load('Debug::Filter::PrintExpr', $VERSION);
 
 local ($,, $\);
 
-sub import {
-	goto \&Exporter::Tiny::import;
-}
+# Make Exporter::Tiny::import ours, so this will be called by Filter::Simple
+BEGIN {*import = \&Exporter::Tiny::import;}
 
 # variable is exposed and my be overwritten by caller
 our $handle = *STDERR;
