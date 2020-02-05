@@ -152,13 +152,14 @@ sub _printref {
 	local ($,, $\);
 	print $handle $label ? $label : "line $line:", " ";
 	my $d = Data::Dumper->new([@value]);
-	my $dump =  $d->Dump;
 	if (scalar(@value) <= 1) {
-		$dump =~ s/^\$VAR1/$expr/;
+		$d->Names([$expr]);
 	} else {
-		$dump =~ s/^\$VAR(\d+)/"($expr)[" . ($1 - 1) . "]"/meg;
+		my @names;
+		push @names, "\${[$expr]}[$_]" foreach 0 .. $#value;
+		$d->Names(\@names);
 	}
-	print $handle "\n", $dump;
+	print $handle "\n", $d->Dump;
 }
 
 # process a debug statement
