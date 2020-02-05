@@ -567,7 +567,7 @@ Jörg Sommrey
 
 =head1 LICENCE AND COPYRIGHT
 
-Copyright (c) 2018-2019, Jörg Sommrey. All rights reserved.
+Copyright (c) 2018-2020, Jörg Sommrey. All rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
