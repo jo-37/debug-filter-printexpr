@@ -63,11 +63,18 @@ for various debugging purposes.
 (Besides, there is [Smart::Comments](https://metacpan.org/pod/Smart::Comments) from Damian, that does something
 very similar but more advanced.)
 
-Just by removing the "use" of `Debug::Filter::PrintExpr` completely
-or disabling it partially by
+Just by removing the "use" of `Debug::Filter::PrintExpr` completely,
+disabling it partially by
 
 ```
     no Debug::Filter::PrintExpr;
+```
+
+or making the usage conditional (e.g. on an environment variable)
+by
+
+```perl
+    use if $ENV{DEBUG}, 'Debug::Filter::PrintExpr';
 ```
 
 all these lines (or a part of them) lose their magic and remain
