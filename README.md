@@ -27,8 +27,8 @@ This program produces an output like this:
     line 14: @a = ('this', 'is', 'an', 'array');
     line 15: %h = ('' => 'empty', 'key1' => 'value1', 'key2' => 'value2', 'undef' => undef);
     calc: @a * 2  = 8;
-    line 17: 
-    $ref = {
+    line 17: dump($ref);
+    $_[0] = {
               '' => 'empty',
               'key1' => 'value1',
               'key2' => 'value2',
@@ -133,8 +133,9 @@ and the output format of the result:
 
 - `\`
 
-    The expression shall be a list of references.
-    These will be evaluated using [Data::Dumper](https://metacpan.org/pod/Data::Dumper).
+    The expression shall evaluate to a list of references.
+    These will be evaluated using [Data::Dumper](https://metacpan.org/pod/Data::Dumper) as if used as
+    parameter list to a subroutine call, i.e. named as `$_[_n_]`.
 
 - `"`
 
