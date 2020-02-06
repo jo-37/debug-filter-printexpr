@@ -150,15 +150,11 @@ sub _printhashclose {
 sub _printref {
 	my ($self, $label, $line, $expr, @value) = @_;
 	local ($,, $\);
-	print $handle $label ? $label : "line $line:", " ";
+	print $handle $label ? $label : "line $line:", " \@_ = ($expr);";
 	my $d = Data::Dumper->new([@value]);
-	if (scalar(@value) <= 1) {
-		$d->Names([$expr]);
-	} else {
-		my @names;
-		push @names, "\${[$expr]}[$_]" foreach 0 .. $#value;
-		$d->Names(\@names);
-	}
+	my @names;
+	push @names, "_[$_]" foreach 0 .. $#value;
+	$d->Names(\@names);
 	print $handle "\n", $d->Dump;
 }
 
