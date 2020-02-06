@@ -117,7 +117,7 @@ and the output format of the result:
     Hash and array references are shown in their usual string representation
     as e.g. `ARRAY(0x19830d0)` or `HASH(0xccba88)`.
     Blessed references are shown by the class they are belong to as
-    `blessed(_class_)`.
+    `blessed(class)`.
 
 - `@`
 
@@ -135,7 +135,7 @@ and the output format of the result:
 
     The expression shall evaluate to a list of references.
     These will be evaluated using [Data::Dumper](https://metacpan.org/pod/Data::Dumper) as if used as
-    parameter list to a subroutine call, i.e. named as `$_[_n_]`.
+    parameter list to a subroutine call, i.e. named as `$_[$i]`.
 
 - `"`
 

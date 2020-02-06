@@ -338,7 +338,7 @@ Undefined values are represented by the unquoted string C<undef>.
 Hash and array references are shown in their usual string representation
 as e.g. C<ARRAY(0x19830d0)> or C<HASH(0xccba88)>.
 Blessed references are shown by the class they are belong to as
-C<blessed(I<class>)>.
+C<< blessed(class) >>.
 
 =item C<@>
 
@@ -356,7 +356,7 @@ I<value> is formatted like a single scalar.
 
 The expression shall evaluate to a list of references.
 These will be evaluated using L<Data::Dumper> as if used as
-parameter list to a subroutine call, i.e. named as C<$_[I<n>]>.
+parameter list to a subroutine call, i.e. named as C<$_[$i]>.
 
 =item C<">
 
