@@ -20,20 +20,20 @@ Debug::Filter::PrintExpr - Convert comment lines to debug print statements
     #\{$ref}
 ```
 
-This program produces an output like this:
+This produces an output like:
 
 ```perl
-    line 13: $s = 'a scalar';
-    line 14: @a = ('this', 'is', 'an', 'array');
-    line 15: %h = ('' => 'empty', 'key1' => 'value1', 'key2' => 'value2', 'undef' => undef);
-    calc: @a * 2  = 8;
-    line 17: dump($ref);
-    $_[0] = {
-              '' => 'empty',
-              'key1' => 'value1',
-              'key2' => 'value2',
-              'undef' => undef
-            };
+    L13: $s = 'a scalar';
+    L14: @a = ('this', 'is', 'an', 'array');
+    L15: %h = ('' => 'empty', 'key1' => 'value1', 'key2' => 'value2', 'undef' => undef);
+    calc: @a * 2 = 8;
+    L17: dump($ref);
+         $_[0] = {
+                   '' => 'empty',
+                   'key1' => 'value1',
+                   'key2' => 'value2',
+                   'undef' => undef
+                 };
 ```
 
 # DESCRIPTION
@@ -101,7 +101,7 @@ qr{
 where `type` represents the sigil, `label` an optional label and
 `expr` an optional expression.
 
-If the label is omitted, it defaults to `line nnn:`, where nnn is the
+If the label is omitted, it defaults to `L_n_:`, where n is the
 line number in the program.
 
 The sigil determines the evaluation context for the given expression
@@ -111,31 +111,13 @@ and the output format of the result:
 
     The expression is evaluated in scalar context. Strings are printed
     inside single quotes, integer and floating point numbers are
-    printed unquoted and dual valued variables are shown in both
-    representations seperated by a colon.
+    printed unquoted and dual valued variables are shown in the form
+    `dualvar(_numval_, '_stringval_')`.
     Undefined values are represented by the unquoted string `undef`.
     Hash and array references are shown in their usual string representation
     as e.g. `ARRAY(0x19830d0)` or `HASH(0xccba88)`.
     Blessed references are shown by the class they are belong to as
     `blessed(class)`.
-
-- `@`
-
-    The expression is evaluated in list context and the elements of the
-    list are printed like single scalars, separated by commas and gathered
-    in parentheses.
-
-- `%`
-
-    The expression is used as argument in a while-each loop and the output
-    consists of pairs of the form 'key' => _value_ inside parentheses.
-    _value_ is formatted like a single scalar.
-
-- `\`
-
-    The expression shall evaluate to a list of references.
-    These will be evaluated using [Data::Dumper](https://metacpan.org/pod/Data::Dumper) as if used as
-    parameter list to a subroutine call, i.e. named as `$_[$i]`.
 
 - `"`
 
@@ -145,20 +127,38 @@ and the output format of the result:
 
     The expression is evaluated in scalar context as a numeric value.
 
+- `@`
+
+    The expression is evaluated in list context and the elements of the
+    list are printed like single scalars, separated by commas and gathered
+    in parentheses.
+
+- `%`
+
+    The expression is evaluated as a list of key-value pairs
+    and is presented in the form 'key' => _value_,... inside parentheses.
+    _value_ is formatted like a single scalar.
+
+- `\`
+
+    The expression shall evaluate to a list of references.
+    These will be evaluated using [Data::Dumper](https://metacpan.org/pod/Data::Dumper) and named
+    like parameters in a subroutine, i.e. `$_[_n_]`.
+
 The usage and difference between `#${}`, `#"{}` and `##{}` is
 best described by example:
 
 ```perl
     my $dt = DateTime->now;
-    #${$dt}         # line nn: $dt = blessed(DateTime);
-    #"{$dt}         # line nn: $dt = '2019-10-27T15:54:28';
+    #${$dt}         # Ln: $dt = blessed(DateTime);
+    #"{$dt}         # Ln: $dt = '2019-10-27T15:54:28';
 
     my $num = ' 42 ';
-    #${$num}        # line nn: $num = ' 42 ';
+    #${$num}        # Ln: $num = ' 42 ';
     $num + 0;
-    #${$num}        # line nn: $num = ' 42 ' : 42;
-    #"{$num}        # line nn: $num = ' 42 ';
-    ##{$num}        # line nn: $num = 42;
+    #${$num}        # Ln: $num = dualvar(42, ' 42 ');
+    #"{$num}        # Ln: $num = ' 42 ';
+    ##{$num}        # Ln: $num = 42;
 ```
 
 The forms #${}, #"{}, ##{} and #@{} may be used for any type of expression
@@ -170,16 +170,14 @@ to use:
     #@{scalar_as_array: $s}
     #${array_as_scalar :@a}
     #@{hash_as_array: %h}
-    #%{array_as_hash: @a}
 ```
 
 and produce these results:
 
-```perl
+```
     scalar_as_array: $s = ('this is a scalar');
     array_as_scalar: @a = 4;
     hash_as_array: %h = ('k1', 'v1', 'k2', 'v2');
-    array_as_hash: @a = ('0' => 'this', '1' => 'is', '2' => 'an', '3' => 'array');
     
 ```
 
@@ -192,7 +190,7 @@ Regular expressions may be evaluated too:
 gives:
 
 ```
-    line nn: "a<b>c<d><e>f<g>h" =~ /\w*<(\w+)>/g = ('b', 'd', 'e', 'g');
+    Ln: "a<b>c<d><e>f<g>h" =~ /\w*<(\w+)>/g = ('b', 'd', 'e', 'g');
 ```
 
 If the expression is omitted, only the label will be printed.
@@ -201,8 +199,8 @@ The sigil `$` should be used in this case.
 Requirements for the expression are:
 
 - It must be a valid Perl expression.
-- In case of the #%{}-form, it must be a valid argument to the
-each() builtin function, i.e. it should resolve to an array or hash.
+- In case of the #%{}-form, it must evaluate to a list of pairs, e.g.
+a hash.
 
 A PrintExpr will be resolved to a block and therefore may be located
 anywhere in the program where a block is valid. 
@@ -286,7 +284,7 @@ The main requirements for this module were:
 - Always print the literal expression along with its evaluation.
 - Give a defined context where the expression is evaluated.
 Especially provide scalar and list context or perform an iteration
-over a while-each-loop.
+over the key-value pairs of a hash.
 The usage of [Data::Dumper](https://metacpan.org/pod/Data::Dumper) was adopted later from Damian's
 implementation.
 - Trailing whitespace in values should be clearly visible.
