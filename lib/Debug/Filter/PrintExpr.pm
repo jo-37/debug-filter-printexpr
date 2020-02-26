@@ -145,14 +145,10 @@ my %type_defs = (
 	'\\' => ['ref', 0],
 );
 
-# process a debug statement
+# process a debug statement, runs in filter context
 sub _gen_print {
-	my ($type, $label, $expr, $val) = (
-			$_[0],
-			$_[1] // '',
-			$_[2] // '',
-			$_[2] // '()',
-		);
+	my ($type, $label, $expr) = map $_ // '', @_;
+	my $val = $_[2] // '()';
 	my ($ptype, $scalar) = @{$type_defs{$type}};
 	my $print = __PACKAGE__ . "::_print_$ptype";
 	return qq[{$print("$label", __LINE__, q{$expr}, ] .
