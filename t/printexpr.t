@@ -151,4 +151,18 @@ prepare;
 #%{}
 like $result, qr/^L\d+: \(\);$/, 'empty hash';
 
+prepare;
+ ##$()
+is $result, '', 'has prefix';
+#${};
+is $result, '', 'has suffix';
+
+prepare;
+#${ $s  }
+like $result, qr/^L\d+: \$s = 'xxx';$/, 'braces and spaces';
+
+prepare;
+#${ $h{k1} }
+like $result, qr/^L\d+: \$h\{k1\} = 'v1';$/, 'braces and spaces';
+
 done_testing;

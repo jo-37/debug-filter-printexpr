@@ -168,13 +168,13 @@ FILTER {
 	$debug ||= grep /^-debug$/, @args;
 	$nofilter ||= grep /^-nofilter$/, @args;
 	s/
-		^\h*\#
+		^\h*+\#
 		(?<type>[%@\$\\#"])
-		\{\h*
-		(?<label>[[:alpha:]_]\w*:)?
-		\h*
-		(?<expr>\V+)?
-		\}\h*\r?$
+		\{\h*+
+		(?<label>[[:alpha:]_]\w*+:)?
+		\h*+
+		(?<expr>\V*[^\s])?\h*
+		\}\h*+\r?$
 	/ _gen_print($+{type}, $+{label}, $+{expr}) /gmex
 		unless $nofilter;
 	print STDERR if $debug;
