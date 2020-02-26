@@ -33,13 +33,14 @@ BEGIN {*import = \&Exporter::Tiny::import;}
 our $handle = *STDERR;
 
 # generate a prefix containing line number or custom label
-# consume first three args, return third
+# consume first three args, return number of printed chars
+# if no expression is present
 sub _genprefix {
-	my ($label, $line, $expr) = splice @_, 0, 3;
+	my ($label, $line, $expr, $pos) = splice @_, 0, 3;
 	local ($,, $\);
-	print $handle $label || "L$line:";
+	printf $handle "%s%n", $label || "L$line:", $pos;
 	print $handle $expr ? " $expr = " : " ";
-	return $expr;
+	return $expr ? undef : $pos + 1;
 }
 
 # create representation of single value
@@ -86,47 +87,49 @@ sub _valuehash {
 		pairs(@_))), ");\n";
 }
 
-# process a complete scalar debug statement
+# process a scalar debug statement
 sub _print_scalar {
 	local ($,, $\);
-	if (&_genprefix) {
+	unless (&_genprefix) {
 		_valuescalar($_[0]);
 		print $handle ';';
 	}
 	print $handle "\n";
 }
 
-# process a complete string scalar debug statement
+# process a string scalar debug statement
 sub _print_str {
-	splice @_, 3, 1, "$_[3]";
+	my $val = $_[3];
+	splice @_, 3, 1, "$val";
 	goto &_print_scalar;
 }
 
-# process a complete numeric scalar debug statement
+# process a numeric scalar debug statement
 sub _print_num {
 	no warnings qw(numeric);
-	splice @_, 3, 1, ($_[3]+0);
+	my $val = $_[3];
+	splice @_, 3, 1, $val + 0;
 	goto &_print_scalar;
 }
 
-# process a complete array debug statement
+# process an array debug statement
 sub _print_array {
 	&_genprefix;
 	goto &_valuearray;
 }
 
-# process a complete hash debug statement
+# process a hash debug statement
 sub _print_hash {
 	&_genprefix;
 	goto &_valuehash;
 }
 
-# process a complete reference debug statement
+# process a reference debug statement
 sub _print_ref {
-	my ($label, $line, $expr, $skip) = splice @_, 0, 3;
+	my $expr = splice @_, 2, 1, undef;
+	my $skip = &_genprefix;
 	local ($,, $\);
-	printf $handle "%s %ndump(%s);\n",
-		$label || "L$line:", $skip, $expr;
+	print $handle "dump($expr);\n";
 	print $handle 
 		Data::Dumper->new([@_], [map("_[$_]", (0 .. $#_))])
 		->Pad(' ' x $skip)->Dump;
@@ -144,16 +147,17 @@ my %type_defs = (
 
 # process a debug statement
 sub _gen_print {
-	my ($type, $label, $expr, $val) = @_;
+	my ($type, $label, $expr, $val) = (
+			$_[0],
+			$_[1] // '',
+			$_[2] // '',
+			$_[2] // '()',
+		);
 	my ($ptype, $scalar) = @{$type_defs{$type}};
-	return '# type unkown' unless $ptype;
-	($label, $val, $expr) = ($label // '',
-		$scalar ? $expr // "''" : $expr,
-		$expr // '');
 	my $print = __PACKAGE__ . "::_print_$ptype";
 	return qq[{$print("$label", __LINE__, q{$expr}, ] .
 		($scalar ? qq[scalar($val)] : qq[$val]) .
-		qq[);} # expr: $expr];
+		q[)}];
 }
 
 # source code processing happens here

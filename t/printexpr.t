@@ -4,10 +4,11 @@ use warnings;
 no warnings qw(void numeric);
 use utf8;
 
-use Debug::Filter::PrintExpr -debug;
+#use Debug::Filter::PrintExpr -debug;
+use Debug::Filter::PrintExpr;
 use Test2::V0;
 use IO::String;
-use Scalar::Util qw/dualvar/;
+use Scalar::Util qw/dualvar isdual/;
 
 # get the filehandle ref into our namespace and close it
 our $handle;
@@ -128,6 +129,16 @@ like $result, qr/^L\d+: \$dual = 42;$/, 'numeric value';
 prepare;
 #${$dual}
 like $result, qr/^L\d+: \$dual = dualvar\(42, 'the answer'\);$/, 'dual values untouched';
+
+prepare;
+my $sd = "1";
+##{$sd}
+is isdual($sd), F(), "don't dualize string";
+
+prepare;
+my $nd = 2;
+#"{$nd}
+is isdual($nd), F(), "don't dualize number";
 
 prepare;
 my $fstring = '3.1415962';
