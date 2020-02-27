@@ -6,7 +6,6 @@ use utf8;
 
 use Debug::Filter::PrintExpr {nofilter => 1};
 use Test2::V0;
-use IO::String;
 use Scalar::Util qw/dualvar/;
 
 # get the filehandle ref into our namespace and close it
