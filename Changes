@@ -1,4 +1,8 @@
 Revision history for Debug-Filter-PrintExpr
+0.15	Thu Feb 27 09:18:36 2020 +0100
+		[fix]
+		specify version for List::Util
+
 0.14	Wed Feb 26 14:51:09 2020 +0100
 		[feature]
 		simplify several code parts
