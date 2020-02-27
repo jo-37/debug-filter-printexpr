@@ -23,7 +23,7 @@ WriteMakefile(
 		'Test2::V0' => 0,
 		'IO::String' => 0,
 		'Scalar::Util' => 1.26,
-		'List::Util' => 0,
+		'List::Util' => 1.29,
     },
     PREREQ_PM => {
 		'Exporter::Tiny' => 0.025,
