@@ -11,7 +11,7 @@ use List::Util 'pairs';
 use Data::Dumper;
 
 our
-$VERSION = '0.17';
+$VERSION = '0.18';
 
 our @EXPORT_OK = qw(isnumeric isstring);
 our @ISA = qw(Exporter::Tiny);
