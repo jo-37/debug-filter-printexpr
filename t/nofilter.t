@@ -16,8 +16,9 @@ close $handle;
 
 
 # capture debug output into $result
+
 my $result = '';
-$handle = IO::String->new($result);
+open $handle, '>', \$result or die 'cannot open in-memory file';
 #${custom:}
 is $result, '', 'filter disabled';
 
