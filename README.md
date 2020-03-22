@@ -70,7 +70,7 @@ disabling it partially by
     no Debug::Filter::PrintExpr;
 ```
 
-or making the usage conditional (e.g. on an environment variable)
+or making the usage conditional (e.g. on environment variable DEBUG)
 by
 
 ```perl
@@ -218,50 +218,12 @@ about a useless use of something in void context.
 ## Usage
 
 The `use` statement for `Debug::Filter::PrintExpr` may contain
-arguments as described in [Exporter::Tiny::Manual::Importing](https://metacpan.org/pod/Exporter::Tiny::Manual::Importing).
-Importable functions are `isnumeric` and `isstring` as well
-as the import tag `:all` for both of them.
+following arguments:
 
-The (optional) global options hash may contain
-these module specific entries:
-
-- debug => 1
+- -debug
 
     This option causes the resulting source code after comment
     transformation to be written to `STDERR`.
-    This option may also be specified as `-debug` in the
-    `use` statement.
-
-- nofilter => 1
-
-    This options disables source code filtering if only the import
-    of functions is desired.
-    This option may also be specified as `-nofilter` in the
-    `use` statement.
-
-## Functions
-
-- `isstring(_$var_)`
-
-    This function returns true if the "string slot" of _$var_ has a value.
-    This is the case when a string value was assigned to the variable,
-    the variable has been used (recently) in a string context
-    or when the variable is dual-valued.
-
-    It will return false for undefined variables, references and
-    variables with a numeric value that have never been used in a
-    string context.
-
-- `isnumeric(_$var_)`
-
-    This function returns true if the "numeric slot" if _$var_ has a
-    value.
-    This is the case when a numeric value (integer or floating point) was
-    assigned to the variable, the variable has been used (recently) in a
-    numeric context or when the variable is dual-valued.
-
-    It will return false for undefined variables, references and variables
-    with a string value that have never been used in numeric context.
 
 ## Variables
 
@@ -298,10 +260,6 @@ and a specific context is not enforced by the module.
 
 All in all, the module presented here is not much more than a
 programming exercise.
-
-Importing the functions `isstring` and `isnumeric` is done
-by [Exporter::Tiny](https://metacpan.org/pod/Exporter::Tiny).
-For extended options see [Exporter::Tiny::Manual::Importing](https://metacpan.org/pod/Exporter::Tiny::Manual::Importing).
 
 Other related modules: [Scalar::Util](https://metacpan.org/pod/Scalar::Util), [Data::Dumper](https://metacpan.org/pod/Data::Dumper)
 
