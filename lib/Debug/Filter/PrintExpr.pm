@@ -11,7 +11,7 @@ use Data::Dumper;
 use B qw(svref_2object SVf_IOK SVp_IOK SVf_NOK SVp_NOK);
 
 our
-$VERSION = '0.19';
+$VERSION = '0.19_1';
 
 # variable is exposed and my be overwritten by caller
 our $handle = *STDERR;
