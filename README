@@ -1,4 +1,4 @@
-Debug::Filter::PrintExpr
+Debug::Filter::PrintExpr version 0.19_1
 
 This module provides a perl filter that turns specially formed
 comments into print statements for debugging purposes.

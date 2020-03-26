@@ -174,6 +174,10 @@ __END__
 
 Debug::Filter::PrintExpr - Convert comment lines to debug print statements
 
+=head1 VERSION
+
+This document describes Debug::Filter::PrintExpr version 0.19_1
+
 =head1 SYNOPSIS
 
 	use Debug::Filter::PrintExpr;
